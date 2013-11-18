@@ -79,10 +79,13 @@ package
 		
 		private function onSocketData(ev:ProgressEvent):void {
 			try {
-				var msg:String = _socket.readUTF();
-				var params:Object = _socket.readObject();
-				if (_messageCallback != null)
-					_messageCallback(msg, params);
+				while (_socket.bytesAvailable > 0)
+				{
+					var msg:String = _socket.readUTF();
+					var params:Object = _socket.readObject();
+					if (_messageCallback != null)
+						_messageCallback(msg, params);
+				}
 			} catch (e:IOError) {
 				trace("onSocketData error: " + e);
 			} catch (e:EOFError) {
